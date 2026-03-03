@@ -5,7 +5,7 @@ resource "keycloak_realm" "labrador" {
 
 # Client that handles OIDC login in OpenBao
 # Reference: https://medium.com/@sauravkumarsct/integrate-keycloak-as-oidc-jwt-provider-with-hashicorp-vault-ae9ebcf8e335
-resource "keycloak_openid_client" "OpenBao" {
+resource "keycloak_openid_client" "openbao" {
   realm_id  = keycloak_realm.labrador.id
   client_id = "openbao"
 
