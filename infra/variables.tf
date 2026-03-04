@@ -21,3 +21,10 @@ variable "keycloak_realm" {
   type        = string
   default     = "labrador"
 }
+
+variable "vault_token" {
+  description = "Vault token"
+  type        = string
+  sensitive   = true
+}
+

@@ -1,12 +1,4 @@
- # Reference: https://medium.com/@sauravkumarsct/integrate-keycloak-as-oidc-jwt-provider-with-hashicorp-vault-ae9ebcf8e335
-
-data "terraform_remote_state" "keycloak" {
-  backend = "local"
-
-  config = {
-    path = "${path.module}/../keycloak/terraform.tfstate"
-  }
-}
+# Reference: https://medium.com/@sauravkumarsct/integrate-keycloak-as-oidc-jwt-provider-with-hashicorp-vault-ae9ebcf8e335
 
 resource "vault_auth_backend" "oidc" {
   type        = "oidc"
@@ -18,7 +10,7 @@ resource "vault_generic_endpoint" "oidc_config" {
 
   data_json = jsonencode({
     oidc_client_id     = "openbao"
-    oidc_client_secret = data.terraform_remote_state.keycloak.outputs.oidc_client_secret
+    oidc_client_secret = var.oidc_client_secret
     default_role       = "default"
     oidc_discovery_url = "https://idp.scottylabs.org/realms/labrador"
   })
