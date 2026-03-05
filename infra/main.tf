@@ -1,5 +1,6 @@
 module "keycloak" {
   source                   = "./keycloak"
+  admin_group_name         = local.admin_group_name
   cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
   keycloak_client_id       = var.keycloak_client_id
   keycloak_client_secret   = var.keycloak_client_secret

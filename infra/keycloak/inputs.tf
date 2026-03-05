@@ -1,3 +1,8 @@
+variable "admin_group_name" {
+  description = "Admin group name"
+  type        = string
+}
+
 variable "cmu_ldap_bind_credential" {
   description = "CMU LDAP bind password"
   type        = string
