@@ -2,21 +2,21 @@
 # Reference: https://medium.com/@sauravkumarsct/integrate-keycloak-as-oidc-jwt-provider-with-hashicorp-vault-ae9ebcf8e335
 resource "keycloak_openid_client" "openbao" {
   realm_id  = keycloak_realm.labrador.id
-  client_id = "openbao"
+  client_id = var.openbao_oidc_client_id
 
   name        = "OpenBao"
   description = "Secrets manager for Labrador"
 
   access_type = "CONFIDENTIAL"
 
-  root_url = "https://bao.scottylabs.org/ui/vault/auth/oidc/oidc/callback"
+  root_url = "${var.secrets_url}/ui/vault/auth/oidc/oidc/callback"
   valid_redirect_uris = [
-    "https://bao.scottylabs.org/oidc/callback",
-    "https://bao.scottylabs.org/ui/vault/auth/oidc/oidc/callback",
+    "${var.secrets_url}/oidc/callback",
+    "${var.secrets_url}/ui/vault/auth/oidc/oidc/callback",
     "http://localhost:8250/oidc/callback"
   ]
-  web_origins = ["https://bao.scottylabs.org"]
-  admin_url   = "https://bao.scottylabs.org/ui/vault/auth/oidc/oidc/callback"
+  web_origins = [var.secrets_url]
+  admin_url   = "${var.secrets_url}/ui/vault/auth/oidc/oidc/callback"
 
   standard_flow_enabled    = true
   service_accounts_enabled = true

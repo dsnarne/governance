@@ -15,6 +15,12 @@ variable "oidc_client_secret" {
   sensitive   = true
 }
 
+variable "secrets_url" {
+  description = "Secrets URL"
+  type        = string
+}
+
+
 variable "vault_token" {
   description = "Vault token"
   type        = string

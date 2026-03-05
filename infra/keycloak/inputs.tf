@@ -1,3 +1,8 @@
+variable "cmu_ldap_bind_credential" {
+  description = "CMU LDAP bind password"
+  type        = string
+  sensitive   = true
+}
 
 variable "keycloak_client_id" {
   description = "Keycloak client ID"
@@ -11,12 +16,6 @@ variable "keycloak_client_secret" {
   sensitive   = true
 }
 
-variable "keycloak_url" {
-  description = "Keycloak URL"
-  type        = string
-  default     = "https://idp.scottylabs.org"
-}
-
 variable "keycloak_realm" {
   description = "Keycloak realm"
   type        = string
@@ -28,8 +27,19 @@ variable "keycloak_realm_url" {
   type        = string
 }
 
-variable "cmu_ldap_bind_credential" {
-  description = "CMU LDAP bind password"
+variable "keycloak_url" {
+  description = "Keycloak URL"
   type        = string
-  sensitive   = true
+  default     = "https://idp.scottylabs.org"
 }
+
+variable "openbao_oidc_client_id" {
+  description = "OIDC client ID"
+  type        = string
+}
+
+variable "secrets_url" {
+  description = "Secrets URL"
+  type        = string
+}
+

@@ -8,6 +8,6 @@ terraform {
 }
 
 provider "vault" {
-  address = "https://bao.scottylabs.org"
+  address = var.secrets_url
   token   = var.vault_token
 }

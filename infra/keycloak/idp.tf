@@ -92,7 +92,7 @@ resource "keycloak_authentication_flow" "browser" {
 
 resource "keycloak_authentication_execution" "saml_redirector" {
   realm_id          = keycloak_realm.labrador.id
-  parent_flow_alias = "browser"
+  parent_flow_alias = keycloak_authentication_flow.browser.alias
   authenticator     = "identity-provider-redirector"
   requirement       = "REQUIRED"
   priority          = 25
@@ -104,6 +104,6 @@ resource "keycloak_authentication_execution_config" "saml_redirector_config" {
   execution_id = keycloak_authentication_execution.saml_redirector.id
   alias        = "CMU SAML Redirector"
   config = {
-    defaultProvider = "cmu-saml"
+    defaultProvider = keycloak_saml_identity_provider.cmu_saml.alias
   }
 }
