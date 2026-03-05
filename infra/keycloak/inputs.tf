@@ -23,6 +23,11 @@ variable "keycloak_realm" {
   default     = "labrador"
 }
 
+variable "keycloak_realm_url" {
+  description = "Keycloak realm URL"
+  type        = string
+}
+
 variable "cmu_ldap_bind_credential" {
   description = "CMU LDAP bind password"
   type        = string

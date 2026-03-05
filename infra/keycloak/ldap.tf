@@ -1,3 +1,4 @@
+# CMU LDAP user federation
 resource "keycloak_ldap_user_federation" "cmu_ldap" {
   # General options
   realm_id = keycloak_realm.labrador.id

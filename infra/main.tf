@@ -1,8 +1,9 @@
 module "keycloak" {
   source                   = "./keycloak"
+  cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
   keycloak_client_id       = var.keycloak_client_id
   keycloak_client_secret   = var.keycloak_client_secret
-  cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
+  keycloak_realm_url       = local.keycloak_realm_url
 }
 
 module "secrets" {

@@ -1,3 +1,4 @@
+# CMU SAML identity provider
 resource "keycloak_saml_identity_provider" "cmu_saml" {
   # General settings
   realm        = keycloak_realm.labrador.realm
@@ -5,7 +6,7 @@ resource "keycloak_saml_identity_provider" "cmu_saml" {
   display_name = "CMU SAML"
 
   # SAML settings
-  entity_id                  = "https://idp.scottylabs.org/realms/labrador"
+  entity_id                  = var.keycloak_realm_url
   single_sign_on_service_url = "https://login.cmu.edu/idp/profile/SAML2/POST/SSO"
 
   name_id_policy_format = "Transient"
@@ -26,7 +27,7 @@ resource "keycloak_saml_identity_provider" "cmu_saml" {
   # Advanced settings
   store_token                   = false
   trust_email                   = true
-  first_broker_login_flow_alias = "Auto-link LDAP users"
+  first_broker_login_flow_alias = keycloak_authentication_flow.auto_link_ldap_users.alias
   sync_mode                     = "FORCE"
 
   # Couldn't locate in the UI but was present when imported
@@ -43,6 +44,7 @@ resource "keycloak_saml_identity_provider" "cmu_saml" {
   }
 }
 
+# Username mapper
 resource "keycloak_user_template_importer_identity_provider_mapper" "username" {
   realm                   = keycloak_realm.labrador.id
   identity_provider_alias = keycloak_saml_identity_provider.cmu_saml.alias
@@ -53,5 +55,55 @@ resource "keycloak_user_template_importer_identity_provider_mapper" "username" {
   extra_config = {
     syncMode = "INHERIT"
     target   = "BROKER_USERNAME"
+  }
+}
+
+# Auto-link LDAP users flow
+resource "keycloak_authentication_flow" "auto_link_ldap_users" {
+  realm_id    = keycloak_realm.labrador.id
+  alias       = "Auto-link LDAP users"
+  description = "Actions taken after first broker login with identity provider account, which is not yet linked to any Keycloak account"
+}
+
+
+# Results in "Invalid username or password." error when this execution is disabled
+resource "keycloak_authentication_execution" "create_user_if_unique" {
+  realm_id          = keycloak_realm.labrador.id
+  parent_flow_alias = keycloak_authentication_flow.auto_link_ldap_users.alias
+  authenticator     = "idp-create-user-if-unique"
+  requirement       = "ALTERNATIVE"
+  priority          = 0
+}
+
+resource "keycloak_authentication_execution" "auto_set_existing_user" {
+  realm_id          = keycloak_realm.labrador.id
+  parent_flow_alias = keycloak_authentication_flow.auto_link_ldap_users.alias
+  authenticator     = "idp-auto-link"
+  requirement       = "ALTERNATIVE"
+  priority          = 1
+}
+
+# Modify the default browser flow to redirect to the CMU SAML provider
+resource "keycloak_authentication_flow" "browser" {
+  realm_id    = keycloak_realm.labrador.id
+  alias       = "browser"
+  description = "Browser based authentication"
+}
+
+resource "keycloak_authentication_execution" "saml_redirector" {
+  realm_id          = keycloak_realm.labrador.id
+  parent_flow_alias = "browser"
+  authenticator     = "identity-provider-redirector"
+  requirement       = "REQUIRED"
+  priority          = 25
+}
+
+
+resource "keycloak_authentication_execution_config" "saml_redirector_config" {
+  realm_id     = keycloak_realm.labrador.id
+  execution_id = keycloak_authentication_execution.saml_redirector.id
+  alias        = "CMU SAML Redirector"
+  config = {
+    defaultProvider = "cmu-saml"
   }
 }

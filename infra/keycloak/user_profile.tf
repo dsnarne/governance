@@ -1,14 +1,19 @@
+locals {
+  view_permissions = ["admin", "user"]
+  edit_permissions = ["admin"]
+}
+
 resource "keycloak_realm_user_profile" "userprofile" {
   realm_id = keycloak_realm.labrador.id
 
   attribute {
-    name         = "username"
+    name         = keycloak_user_template_importer_identity_provider_mapper.username.name
     display_name = "$${username}"
 
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
@@ -17,157 +22,102 @@ resource "keycloak_realm_user_profile" "userprofile" {
     display_name = "$${email}"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "fullEmail"
+    name         = keycloak_ldap_user_attribute_mapper.full_email.user_model_attribute
     display_name = "Full Email"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "firstName"
+    name         = keycloak_ldap_user_attribute_mapper.first_name.user_model_attribute
     display_name = "$${firstName}"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "middleName"
-    display_name = "Middle Name"
-
-
-    permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
-    }
-  }
-
-  attribute {
-    name         = "lastName"
+    name         = keycloak_ldap_user_attribute_mapper.last_name.user_model_attribute
     display_name = "$${lastName}"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "fullName"
+    name         = keycloak_ldap_user_attribute_mapper.full_name.user_model_attribute
     display_name = "Full Name"
 
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "displayName"
+    name         = keycloak_ldap_user_attribute_mapper.display_name.user_model_attribute
     display_name = "Display Name"
 
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   # --- CMU Extended Metadata ---
   attribute {
-    name         = "orcid"
-    display_name = "ORCID"
-
-
-    permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
-    }
-  }
-
-  attribute {
-    name         = "primaryAffiliation"
-    display_name = "Primary Affiliation"
-
-
-    permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
-    }
-  }
-
-  attribute {
-    name         = "affiliations"
+    name         = keycloak_ldap_user_attribute_mapper.affiliations.user_model_attribute
     display_name = "Affiliations"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "departments"
+    name         = keycloak_ldap_user_attribute_mapper.departments.user_model_attribute
     display_name = "Departments"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "colleges"
+    name         = keycloak_ldap_user_attribute_mapper.colleges.user_model_attribute
     display_name = "Colleges"
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
   attribute {
-    name         = "level"
-    display_name = "Level"
-
-
-    permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
-    }
-  }
-
-  attribute {
-    name         = "class"
+    name         = keycloak_ldap_user_attribute_mapper.class.user_model_attribute
     display_name = "Class"
 
 
     permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
-    }
-  }
-
-  attribute {
-    name         = "status"
-    display_name = "Status"
-
-
-    permissions {
-      view = ["admin", "user"]
-      edit = ["admin"]
+      view = local.view_permissions
+      edit = local.edit_permissions
     }
   }
 
