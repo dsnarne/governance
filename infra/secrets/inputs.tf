@@ -1,5 +1,10 @@
-variable "admin_group_name" {
-  description = "Admin group name"
+variable "admin_group_suffix" {
+  description = "Admin group suffix"
+  type        = string
+}
+
+variable "leadership_group_name" {
+  description = "Leadership group name"
   type        = string
 }
 

@@ -1,5 +1,5 @@
-variable "admin_group_name" {
-  description = "Admin group name"
+variable "admin_group_suffix" {
+  description = "Admin group suffix"
   type        = string
 }
 
@@ -7,6 +7,11 @@ variable "cmu_ldap_bind_credential" {
   description = "CMU LDAP bind password"
   type        = string
   sensitive   = true
+}
+
+variable "leadership_group_name" {
+  description = "Leadership group name"
+  type        = string
 }
 
 variable "keycloak_client_id" {
