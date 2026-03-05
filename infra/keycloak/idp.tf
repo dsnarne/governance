@@ -35,3 +35,16 @@ resource "keycloak_saml_identity_provider" "cmu_saml" {
     allowCreate              = "true"
   }
 }
+
+resource "keycloak_user_template_importer_identity_provider_mapper" "username" {
+  realm                   = keycloak_realm.labrador.id
+  name                    = "username"
+  identity_provider_alias = keycloak_saml_identity_provider.cmu_saml.alias
+
+  template = "$${ATTRIBUTE.urn:oid:1.3.6.1.4.1.5923.1.1.1.6 | localpart}"
+
+  extra_config = {
+    syncMode = "INHERIT"
+    target   = "BROKER_USERNAME"
+  }
+}
