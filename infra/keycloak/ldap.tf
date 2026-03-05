@@ -10,7 +10,7 @@ resource "keycloak_ldap_user_federation" "cmu_ldap" {
   use_truststore_spi = "ALWAYS"
   connection_pooling = true
   bind_dn            = "uid=scottylabs-svc,ou=andrewperson,dc=andrew,dc=cmu,dc=edu"
-  bind_credential    = var.cmu_ldap_bind_password
+  bind_credential    = var.cmu_ldap_bind_credential
 
   # LDAP searching and updating
   edit_mode                 = "UNSYNCED"

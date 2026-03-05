@@ -1,10 +1,10 @@
 module "keycloak" {
-  source                 = "./keycloak"
-  keycloak_client_id     = var.keycloak_client_id
-  keycloak_client_secret = var.keycloak_client_secret
-  keycloak_url           = var.keycloak_url
-  keycloak_realm         = var.keycloak_realm
-  cmu_ldap_bind_password = var.cmu_ldap_bind_password
+  source                   = "./keycloak"
+  keycloak_client_id       = var.keycloak_client_id
+  keycloak_client_secret   = var.keycloak_client_secret
+  keycloak_url             = var.keycloak_url
+  keycloak_realm           = var.keycloak_realm
+  cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
 }
 
 module "secrets" {

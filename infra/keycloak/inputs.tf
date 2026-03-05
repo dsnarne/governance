@@ -23,7 +23,7 @@ variable "keycloak_realm" {
   default     = "labrador"
 }
 
-variable "cmu_ldap_bind_password" {
+variable "cmu_ldap_bind_credential" {
   description = "CMU LDAP bind password"
   type        = string
   sensitive   = true
