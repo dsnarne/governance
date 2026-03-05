@@ -28,6 +28,7 @@ resource "keycloak_saml_identity_provider" "cmu_saml" {
   store_token                   = false
   trust_email                   = true
   first_broker_login_flow_alias = keycloak_authentication_flow.auto_link_ldap_users.alias
+  post_broker_login_flow_alias  = keycloak_authentication_flow.post_login.alias
   sync_mode                     = "FORCE"
 
   # Couldn't locate in the UI but was present when imported
@@ -81,6 +82,22 @@ resource "keycloak_authentication_execution" "auto_set_existing_user" {
   authenticator     = "idp-auto-link"
   requirement       = "ALTERNATIVE"
   priority          = 1
+}
+
+# Post login flow to force the cookies to have a lifetime beyond the users session.
+# i.e: reduce the frequency of needing to re-authenticate through CMU SAML.
+resource "keycloak_authentication_flow" "post_login" {
+  realm_id    = keycloak_realm.labrador.id
+  alias       = "SAML post login"
+  description = "Post login flow to force the cookies to have a lifetime beyond the users session."
+}
+
+resource "keycloak_authentication_execution" "post_login_execution" {
+  realm_id          = keycloak_realm.labrador.id
+  parent_flow_alias = keycloak_authentication_flow.post_login.alias
+  authenticator     = "remember-me-authenticator"
+  requirement       = "REQUIRED"
+  priority          = 0
 }
 
 # Modify the default browser flow to redirect to the CMU SAML provider
