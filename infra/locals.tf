@@ -4,4 +4,7 @@ locals {
   secrets_url            = "https://bao.scottylabs.org"
   leadership_group_name  = "leadership"
   admin_suffix           = "admins"
+
+  leadership_data = jsondecode(file("inputs.json")).leadership
+  teams_data      = jsondecode(file("inputs.json")).teams
 }

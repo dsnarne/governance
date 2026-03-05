@@ -2,6 +2,7 @@ module "keycloak" {
   source                   = "./keycloak"
   admin_group_suffix       = local.admin_suffix
   leadership_group_name    = local.leadership_group_name
+  leadership_data          = local.leadership_data
   cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
   keycloak_client_id       = var.keycloak_client_id
   keycloak_client_secret   = var.keycloak_client_secret

@@ -14,6 +14,14 @@ variable "leadership_group_name" {
   type        = string
 }
 
+variable "leadership_data" {
+  description = "Leadership data"
+  type = object({
+    members = list(string)
+    admins  = list(string)
+  })
+}
+
 variable "keycloak_client_id" {
   description = "Keycloak client ID"
   type        = string
