@@ -30,6 +30,16 @@ resource "keycloak_openid_client" "openbao" {
   frontchannel_logout_enabled = true
 }
 
+# Groups mapper to send full paths in token
+resource "keycloak_openid_group_membership_protocol_mapper" "openbao_groups" {
+  realm_id  = keycloak_realm.labrador.id
+  client_id = keycloak_openid_client.openbao.id
+
+  name       = "groups"
+  claim_name = "groups"
+  full_path  = false
+}
+
 resource "keycloak_authentication_flow" "auto_link_ldap_users" {
   realm_id    = keycloak_realm.labrador.id
   alias       = "Auto-link LDAP users"
