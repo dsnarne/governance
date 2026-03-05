@@ -4,6 +4,7 @@ module "keycloak" {
   keycloak_client_secret = var.keycloak_client_secret
   keycloak_url           = var.keycloak_url
   keycloak_realm         = var.keycloak_realm
+  cmu_ldap_bind_password = var.cmu_ldap_bind_password
 }
 
 module "secrets" {
