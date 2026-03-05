@@ -39,4 +39,7 @@ module "secrets" {
   # Group names
   admin_group_suffix    = local.admin_suffix
   leadership_group_name = local.leadership_group_name
+
+  # Data
+  team_slugs = toset(keys(local.teams_data))
 }

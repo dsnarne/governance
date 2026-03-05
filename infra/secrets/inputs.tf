@@ -30,6 +30,10 @@ variable "secrets_url" {
   type        = string
 }
 
+variable "team_slugs" {
+  description = "Team slugs"
+  type        = set(string)
+}
 
 variable "vault_token" {
   description = "Vault token"

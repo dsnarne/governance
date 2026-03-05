@@ -35,10 +35,15 @@ resource "vault_jwt_auth_backend_role" "default" {
   ]
 }
 
-# The default policy initialized in OpenBao.
+# Every rule except the very first one is the default policy initialized in OpenBao.
 resource "vault_policy" "default" {
   name   = local.default_policy
   policy = <<-EOT
+            # Allow everyone to list all metadata for easier navigation.
+            path "${vault_mount.kv.path}/metadata/*" {
+                capabilities = ["list"]
+            }
+
             # Allow tokens to look up their own properties
             path "auth/token/lookup-self" {
                 capabilities = ["read"]
