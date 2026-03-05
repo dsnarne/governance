@@ -1,0 +1,14 @@
+{
+	"type": "object",
+	"required": ["full-name"],
+	"properties": {
+		"full-name": {
+			"type": "string"
+		},
+		"andrew-id": {
+			"type": "string",
+			"pattern": "^[a-z0-9]+$"
+		}
+	},
+	"additionalProperties": false
+}
