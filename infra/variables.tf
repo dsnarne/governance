@@ -15,6 +15,7 @@ variable "keycloak_client_secret" {
   type        = string
   sensitive   = true
 }
+
 variable "vault_token" {
   description = "Vault token"
   type        = string
