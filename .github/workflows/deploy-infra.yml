@@ -50,5 +50,8 @@ jobs:
       - name: Validate configuration
         run: tofu validate
 
+      - name: Check configuration formatting
+        run: tofu fmt -check -diff
+
       - name: Plan infrastructure
         run: tofu plan
