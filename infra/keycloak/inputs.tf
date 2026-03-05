@@ -22,6 +22,14 @@ variable "leadership_data" {
   })
 }
 
+variable "teams_data" {
+  description = "Teams data"
+  type = map(object({
+    members = list(string)
+    admins  = list(string)
+  }))
+}
+
 variable "keycloak_client_id" {
   description = "Keycloak client ID"
   type        = string
