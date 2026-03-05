@@ -10,6 +10,7 @@ module "keycloak" {
 
 module "secrets" {
   source             = "./secrets"
+  admin_group_name   = local.admin_group_name
   vault_token        = var.vault_token
   oidc_client_secret = module.keycloak.openbao_oidc_client_secret
   oidc_client_id     = local.openbao_oidc_client_id

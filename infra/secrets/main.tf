@@ -11,23 +11,20 @@ resource "vault_mount" "kv" {
   }
 }
 
-locals {
-  admin_policy_name = "admins"
-}
 resource "vault_identity_group" "admins" {
-  name     = "admins"
+  name     = var.admin_group_name
   type     = "external"
-  policies = [local.admin_policy_name]
+  policies = [vault_policy.admins.name]
 }
 
 resource "vault_identity_group_alias" "admins" {
-  name           = "admins"
+  name           = var.admin_group_name
   canonical_id   = vault_identity_group.admins.id
   mount_accessor = vault_jwt_auth_backend.oidc.accessor
 }
 
 resource "vault_policy" "admins" {
-  name   = local.admin_policy_name
+  name   = var.admin_group_name
   policy = <<-EOT
     path "*" {
       capabilities = ["create", "read", "update", "delete", "list", "sudo"]

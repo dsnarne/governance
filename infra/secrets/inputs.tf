@@ -1,3 +1,8 @@
+variable "admin_group_name" {
+  description = "Admin group name"
+  type        = string
+}
+
 variable "keycloak_realm_url" {
   description = "Keycloak realm URL"
   type        = string
