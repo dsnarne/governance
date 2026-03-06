@@ -1,4 +1,4 @@
-"""Shared helpers for contributors and teams validation."""
+"""Helpers for schema-based TOML key ordering validation."""
 
 from __future__ import annotations
 
@@ -6,18 +6,10 @@ import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Protocol
 
-import tomli
-
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
 from .model import EntityKey, ValidationError
-
-
-def _toml_key_order(content: str) -> list[str]:
-    """Parse TOML and return top-level keys in order (using tomli's behavior)."""
-    data = tomli.loads(content)
-    return list(data.keys())
 
 
 def load_schema_key_ordering(schema_path: str) -> list[str]:

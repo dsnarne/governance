@@ -42,11 +42,21 @@ class Reporter:
             self._files[error.file] = FileValidationMessages()
         self._files[error.file].errors.append(error)
 
+    def insert_errors(self, errors: list[ValidationError]) -> None:
+        """Insert multiple validation errors."""
+        for error in errors:
+            self.insert_error(error)
+
     def insert_warning(self, warning: ValidationWarning) -> None:
         """Insert a validation warning into the per-file bucket."""
         if warning.file not in self._files:
             self._files[warning.file] = FileValidationMessages()
         self._files[warning.file].warnings.append(warning)
+
+    def insert_warnings(self, warnings: list[ValidationWarning]) -> None:
+        """Insert multiple validation warnings."""
+        for warning in warnings:
+            self.insert_warning(warning)
 
     def build_report(self) -> ValidationReport:
         """Compute stats and return a ValidationReport."""

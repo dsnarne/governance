@@ -1,15 +1,16 @@
 """Data models for governance validation."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 
 @dataclass
 class Contributor:
-    """A contributor with key order for schema validation."""
+    """A contributor record loaded from `contributors/*.toml`."""
 
     full_name: str
-    github_username: str
-    slack_member_id: str | None = None
+    andrew_id: str | None = None
     key_order: list[str] = field(default_factory=list)
 
     def get_key_order(self) -> list[str]:
@@ -21,17 +22,34 @@ class Contributor:
         self.key_order = order
 
 
+@dataclass(frozen=True, slots=True)
+class TeamMember:
+    """A contributor entry within a team's membership record."""
+
+    github_username: str
+    title: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class TeamMembership:
+    """Membership record for a given timeframe."""
+
+    timeframe: str
+    maintainers: list[str]
+    contributors: list[TeamMember]
+
+
 @dataclass
 class Team:
-    """A team with key order for schema validation."""
+    """A team record loaded from `teams/*.toml`."""
 
-    name: str
     slug: str
-    maintainers: list[str]
-    contributors: list[str]
-    applicants: list[str] | None = None
+    name: str
+    description: str
+    website: str | None = None
+    create_oidc_clients: bool = True
     repos: list[str] = field(default_factory=list)
-    slack_channel_ids: list[str] = field(default_factory=list)
+    membership: list[TeamMembership] = field(default_factory=list)
     key_order: list[str] = field(default_factory=list)
 
     def get_key_order(self) -> list[str]:
