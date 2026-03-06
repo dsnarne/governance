@@ -3,9 +3,8 @@
   "required": [
     "name",
     "description",
-    "maintainers",
-    "contributors",
-    "repos"
+    "repos",
+    "membership"
   ],
   "properties": {
     "name": {
@@ -58,18 +57,18 @@
           },
           "maintainers": {
             "type": "array",
-            "description": "GitHub usernames of maintainers for this timeframe.",
+            "description": "Maintainers for this timeframe.",
             "items": {
-              "type": "string"
+              "$ref": "#/definitions/member"
             },
             "minItems": 1,
             "uniqueItems": true
           },
           "contributors": {
             "type": "array",
-            "description": "GitHub usernames of contributors for this timeframe.",
+            "description": "Contributors for this timeframe.",
             "items": {
-              "type": "string"
+              "$ref": "#/definitions/member"
             },
             "minItems": 1,
             "uniqueItems": true
@@ -114,5 +113,26 @@
         ]
       }
     }
-  ]
+  ],
+  "definitions": {
+    "member": {
+      "type": "object",
+      "description": "A member of the team, used in the 'maintainers' and 'contributors' arrays.",
+      "required": [
+        "github-username",
+        "title"
+      ],
+      "properties": {
+        "github-username": {
+          "type": "string",
+          "description": "GitHub username of the member."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the member."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }
