@@ -1,3 +1,5 @@
+# These validations are for commits that change the organizational structure.
+
 name: Validate
 
 on:
@@ -8,7 +10,7 @@ on:
 
 jobs:
   validate-editorconfig:
-    name: Check EditorConfig Compliance
+    name: Validate EditorConfig Compliance
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +22,7 @@ jobs:
           tool: editorconfig-checker
           fallback: none
 
-      - name: Check EditorConfig Compliance
+      - name: Validate EditorConfig Compliance
         run: editorconfig-checker --exclude ^LICENSE
 
   validate-toml:

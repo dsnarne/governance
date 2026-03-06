@@ -1,0 +1,28 @@
+# These checks are for commits that change the repository logic.
+
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  uv-lint:
+    name: UV Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Run UV Lint
+        run: uv sync --only-dev && uv run lint
+
+  markdownlint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v22
