@@ -1,0 +1,16 @@
+[[rule]]
+include = ["contributors/*.toml", "teams/*.toml"]
+
+[[rule]]
+include = ["contributors/*.toml"]
+
+[rule.schema]
+path = "./meta/schemas/contributor.schema.json"
+enabled = true
+
+[[rule]]
+include = ["teams/*.toml"]
+
+[rule.schema]
+path = "./meta/schemas/team.schema.json"
+enabled = true
