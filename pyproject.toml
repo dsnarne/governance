@@ -3,16 +3,14 @@ name = "governance"
 version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = [
-    "colorama>=0.4.6",
-]
+dependencies = ["colorama>=0.4.6"]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.19.1",
-    "ruff>=0.15.5",
-    "ty>=0.0.20",
-    "types-colorama>=0.4.15.20250801",
+  "mypy>=1.19.1",
+  "ruff>=0.15.5",
+  "ty>=0.0.20",
+  "types-colorama>=0.4.15.20250801",
 ]
 
 [build-system]
