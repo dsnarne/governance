@@ -9,36 +9,29 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Used for any public-facing or display contexts (e.g. the GitHub team name)."
+      "description": "Public or display name of the team (e.g. used in GitHub org team names)."
     },
     "website": {
       "type": "string",
       "format": "url",
-      "description": "The website URL that will be deployed to."
+      "description": "Deployed URL associated with the team."
     },
     "description": {
       "type": "string",
       "description": "A brief description of the team."
     },
+    "create-oidc-clients": {
+      "type": "boolean",
+      "description": "Whether to create OIDC clients for the team.",
+      "default": true
+    },
     "repos": {
       "type": "array",
-      "description": "The GitHub repositories of the team.",
+      "description": "The GitHub repositories owned by the team.",
       "items": {
-        "type": "object",
-        "required": [
-          "slug",
-          "description"
-        ],
-        "properties": {
-          "slug": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
+        "$ref": "#/definitions/repo"
       },
-      "additionalProperties": false
+      "uniqueItems": true
     },
     "membership": {
       "type": "array",
@@ -53,13 +46,13 @@
         "properties": {
           "timeframe": {
             "type": "string",
-            "description": "Membership timeframe, e.g. '2025-2026' or Fall 2025."
+            "description": "Membership timeframe (e.g. '2025-2026' or Fall 2025)."
           },
           "maintainers": {
             "type": "array",
-            "description": "Maintainers for this timeframe.",
+            "description": "GitHub usernames of the maintainers for this timeframe.",
             "items": {
-              "$ref": "#/definitions/member"
+              "type": "string"
             },
             "minItems": 1,
             "uniqueItems": true
@@ -77,11 +70,6 @@
         "additionalProperties": false
       },
       "minProperties": 1
-    },
-    "create-oidc-clients": {
-      "type": "boolean",
-      "description": "Whether to create OIDC clients for the team.",
-      "default": true
     },
     "additionalProperties": false
   },
@@ -117,19 +105,39 @@
   "definitions": {
     "member": {
       "type": "object",
-      "description": "A member of the team, used in the 'maintainers' and 'contributors' arrays.",
+      "description": "A member of the team, used in the 'contributors' array.",
       "required": [
-        "github-username",
+        "username",
         "title"
       ],
       "properties": {
-        "github-username": {
+        "username": {
           "type": "string",
-          "description": "GitHub username of the member."
+          "description": "GitHub username of the contributor."
         },
         "title": {
           "type": "string",
-          "description": "Title of the member."
+          "description": "Title of the contributor in the team."
+        }
+      },
+      "additionalProperties": false
+    },
+    "repo": {
+      "type": "object",
+      "description": "A repository owned by the team.",
+      "required": [
+        "slug",
+        "description"
+      ],
+      "properties": {
+        "slug": {
+          "description": "GitHub repository slug (e.g. 'governance').",
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_.-]+$"
+        },
+        "description": {
+          "description": "Brief description of the repository.",
+          "type": "string"
         }
       },
       "additionalProperties": false
