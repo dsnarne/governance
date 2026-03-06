@@ -17,7 +17,7 @@ from meta.validator.teams.checks import (
 )
 
 if TYPE_CHECKING:
-    from meta.validator.model import Contributor, EntityKey, Team
+    from meta.validator.model import Contributor, Team
     from meta.validator.reporter import Reporter
 
 
@@ -25,8 +25,8 @@ if TYPE_CHECKING:
 class TeamValidator:
     """Run team validation (sync + async) and record results."""
 
-    teams: dict[EntityKey, Team]
-    contributors: dict[EntityKey, Contributor]
+    teams: dict[str, Team]
+    contributors: dict[str, Contributor]
     reporter: Reporter
     schema_path: str = "__meta/schemas/team.schema.json"
 
@@ -39,7 +39,7 @@ class TeamValidator:
         """Run synchronous team checks."""
         ordering = load_schema_key_ordering(self.schema_path)
         self.reporter.insert_errors(
-            validate_key_orderings(self.teams, ordering, kind="team"),
+            validate_key_orderings(self.teams, ordering),
         )
         self.reporter.insert_errors(validate_team_file_names(self.teams))
         self.reporter.insert_errors(validate_maintainers_are_contributors(self.teams))

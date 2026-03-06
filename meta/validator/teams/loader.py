@@ -5,7 +5,7 @@ from typing import Any
 
 import tomli
 
-from meta.validator.model import EntityKey, Team, TeamMember, TeamMembership
+from meta.validator.model import Team, TeamMember, TeamMembership
 
 TEAMS_GLOB = "teams/*.toml"
 
@@ -45,9 +45,9 @@ def _parse_team(data: dict[str, Any], key_order: list[str]) -> Team:
     )
 
 
-def load_teams() -> dict[EntityKey, Team]:
+def load_teams() -> dict[str, Team]:
     """Load all team TOML files."""
-    out: dict[EntityKey, Team] = {}
+    out: dict[str, Team] = {}
     for path in sorted(Path().glob(TEAMS_GLOB)):
         if not path.is_file():
             continue
@@ -55,6 +55,5 @@ def load_teams() -> dict[EntityKey, Team]:
         data: dict[str, Any] = tomli.loads(content)
         key_order = list(data.keys())
         t = _parse_team(data, key_order)
-        key = EntityKey(kind="team", name=path.stem)
-        out[key] = t
+        out[f"teams/{path.name}"] = t
     return out

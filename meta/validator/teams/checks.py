@@ -6,12 +6,12 @@ import asyncio
 import logging
 import os
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import httpx
 
 from meta.validator.model import (
-    EntityKey,
     Team,
     ValidationError,
     ValidationWarning,
@@ -64,18 +64,19 @@ class GitHubRequestError(GitHubRepoCheckError):
         return str(self.cause)
 
 def validate_team_file_names(
-    teams: dict[EntityKey, Team],
+    teams: dict[str, Team],
 ) -> list[ValidationError]:
     """Validate that team file names match slug."""
     logger.info("Validating team file names...")
     errors: list[ValidationError] = []
-    for key, team in teams.items():
-        if key.name != team.slug:
+    for file_path, team in teams.items():
+        file_stem = Path(file_path).stem
+        if file_stem != team.slug:
             errors.append(
                 ValidationError(
-                    file=f"teams/{key.name}.toml",
+                    file=file_path,
                     message=(
-                        f"Team file name '{key.name}' doesn't match slug '{team.slug}'"
+                        f"Team file name '{file_stem}' doesn't match slug '{team.slug}'"
                     ),
                 ),
             )
@@ -83,17 +84,17 @@ def validate_team_file_names(
 
 
 def validate_maintainers_are_contributors(
-    teams: dict[EntityKey, Team],
+    teams: dict[str, Team],
 ) -> list[ValidationError]:
     """Ensure every maintainer is also listed as a contributor in each timeframe."""
     logger.info("Validating that all maintainers are also contributors...")
     errors: list[ValidationError] = []
-    for team_key, team in teams.items():
+    for team_file, team in teams.items():
         for record in team.membership:
             contributor_set = {m.github_username for m in record.contributors}
             errors.extend(
                 ValidationError(
-                    file=f"teams/{team_key.name}.toml",
+                    file=team_file,
                     message=(
                         f"[{record.timeframe}] Maintainer {maintainer!r} "
                         f"missing from contributors"
@@ -106,23 +107,23 @@ def validate_maintainers_are_contributors(
 
 
 def validate_cross_references(
-    contributors: Mapping[EntityKey, object],
-    teams: dict[EntityKey, Team],
+    contributors: Mapping[str, object],
+    teams: dict[str, Team],
 ) -> list[ValidationError]:
     """Check that all team participants exist in contributors."""
     logger.info("Validating cross-references...")
     errors: list[ValidationError] = []
-    for team_key, team in teams.items():
+    for team_file, team in teams.items():
         for record in team.membership:
             participants = list(record.maintainers) + [
                 m.github_username for m in record.contributors
             ]
             for participant in participants:
-                key = EntityKey(kind="contributor", name=participant)
-                if key not in contributors:
+                contributor_file = f"contributors/{participant}.toml"
+                if contributor_file not in contributors:
                     errors.append(
                         ValidationError(
-                            file=f"teams/{team_key.name}.toml",
+                            file=team_file,
                             message=(
                                 f"[{record.timeframe}] Unknown contributor: "
                                 f"{participant}"
@@ -173,12 +174,12 @@ async def _check_github_repository_exists(
 
 
 def _team_repos_to_check(
-    teams: dict[EntityKey, Team],
-) -> list[tuple[EntityKey, str, str]]:
+    teams: dict[str, Team],
+) -> list[tuple[str, str, str]]:
     """Flatten team repositories into (team_key, repo) pairs."""
     return [
-        (team_key, repo_name, f"{SCOTTYLABS_ORG}/{repo_name}")
-        for team_key, team in teams.items()
+        (team_file, repo_name, f"{SCOTTYLABS_ORG}/{repo_name}")
+        for team_file, team in teams.items()
         for repo_name in team.repos
     ]
 
@@ -206,7 +207,7 @@ def _repo_validation_error(
 
 
 async def validate_github_repositories(
-    teams: dict[EntityKey, Team],
+    teams: dict[str, Team],
     client: httpx.AsyncClient,
 ) -> tuple[list[ValidationError], list[ValidationWarning]]:
     """Validate that team repos exist and are in ScottyLabs org."""
@@ -226,21 +227,20 @@ async def validate_github_repositories(
         *(check_one(repository) for _, _, repository in keys_repos),
     )
 
-    for (team_key, repo_name, _), (result_type, org, err_msg) in zip(
+    for (team_file, repo_name, _), (result_type, org, err_msg) in zip(
         keys_repos,
         results,
         strict=False,
     ):
-        file_path = f"teams/{team_key.name}.toml"
         if err_msg:
             warnings.append(
                 ValidationWarning(
-                    file=file_path,
+                    file=team_file,
                     message=f"Failed to check GitHub repository {repo_name}: {err_msg}",
                 ),
             )
             continue
-        err = _repo_validation_error(file_path, repo_name, result_type, org)
+        err = _repo_validation_error(team_file, repo_name, result_type, org)
         if err is not None:
             errors.append(err)
 

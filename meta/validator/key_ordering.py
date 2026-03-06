@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Protocol
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-from .model import EntityKey, ValidationError
+from .model import ValidationError
 
 
 def load_schema_key_ordering(schema_path: str) -> list[str]:
@@ -44,9 +44,8 @@ def _is_subsequence_in_order(
 
 
 def validate_key_orderings(
-    data: Mapping[EntityKey, _HasKeyOrder],
+    data: Mapping[str, _HasKeyOrder],
     expected_order: list[str],
-    kind: str,
 ) -> list[ValidationError]:
     """Validate key order in TOML files against the expected schema order."""
     if not data:
@@ -54,15 +53,14 @@ def validate_key_orderings(
             ValidationError(file="N/A", message="No data found"),
         ]
     errors: list[ValidationError] = []
-    for key, item in data.items():
+    for file_path, item in data.items():
         actual_order = item.get_key_order()
         if not _is_subsequence_in_order(actual_order, expected_order):
-            file_path = f"{kind}s/{key.name}.toml"
             errors.append(
                 ValidationError(
                     file=file_path,
                     message=(
-                        f"Invalid key order for {key}.\n"
+                        f"Invalid key order for {file_path}.\n"
                         f"    - expected (schema): {expected_order}\n"
                         f"    - found (file): {actual_order}"
                     ),

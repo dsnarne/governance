@@ -8,14 +8,14 @@ from meta.validator.contributors.checks import validate_andrew_ids
 from meta.validator.key_ordering import load_schema_key_ordering, validate_key_orderings
 
 if TYPE_CHECKING:
-    from meta.validator.model import Contributor, EntityKey
+    from meta.validator.model import Contributor
     from meta.validator.reporter import Reporter
 
 CONTRIBUTOR_SCHEMA_PATH = "__meta/schemas/contributor.schema.json"
 
 
 def run_sync(
-    contributors: dict[EntityKey, Contributor],
+    contributors: dict[str, Contributor],
     reporter: Reporter,
 ) -> None:
     """Run synchronous contributor checks and record results in reporter."""
@@ -24,7 +24,6 @@ def run_sync(
         validate_key_orderings(
             contributors,
             ordering,
-            kind="contributor",
         ),
     )
     reporter.insert_errors(validate_andrew_ids(contributors))

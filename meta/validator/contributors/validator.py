@@ -9,7 +9,7 @@ from meta.validator.contributors.checks import validate_andrew_ids
 from meta.validator.key_ordering import load_schema_key_ordering, validate_key_orderings
 
 if TYPE_CHECKING:
-    from meta.validator.model import Contributor, EntityKey
+    from meta.validator.model import Contributor
     from meta.validator.reporter import Reporter
 
 
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class ContributorValidator:
     """Run contributor validation (sync + async) and record results."""
 
-    contributors: dict[EntityKey, Contributor]
+    contributors: dict[str, Contributor]
     reporter: Reporter
     schema_path: str = "__meta/schemas/contributor.schema.json"
 
@@ -32,7 +32,6 @@ class ContributorValidator:
             validate_key_orderings(
                 self.contributors,
                 ordering,
-                kind="contributor",
             ),
         )
         self.reporter.insert_errors(validate_andrew_ids(self.contributors))

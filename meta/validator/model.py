@@ -61,32 +61,6 @@ class Team:
         self.key_order = order
 
 
-@dataclass(frozen=True)
-class EntityKey:
-    """Key for looking up an entity (contributor or team) by kind and name."""
-
-    kind: str  # "team" | "contributor"
-    name: str  # file_stem
-
-    def __hash__(self) -> int:
-        """Hash by name for use as a dict key."""
-        return hash(self.name)
-
-    def __eq__(self, other: object) -> bool:
-        """Compare by name when comparing keys."""
-        if not isinstance(other, EntityKey):
-            return NotImplemented
-        return self.name == other.name
-
-    def __str__(self) -> str:
-        """Return the unscoped identifier (file stem)."""
-        return self.name
-
-    def scoped_id(self) -> str:
-        """Return a stable scoped identifier of the form `<kind>:<name>`."""
-        return f"{self.kind}:{self.name}"
-
-
 @dataclass
 class ValidationError:
     """A validation error associated with a file."""

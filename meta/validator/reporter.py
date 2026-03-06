@@ -20,21 +20,20 @@ class Reporter:
 
     def __init__(
         self,
-        contributors: dict[Any, Any],
-        teams: dict[Any, Any],
+        contributors: dict[str, Any],
+        teams: dict[str, Any],
     ) -> None:
         """Initialize file buckets for contributors and teams."""
         self._contributors_count = len(contributors)
         self._teams_count = len(teams)
         self._files: dict[str, FileValidationMessages] = {
-            f"contributors/{k.name}.toml": FileValidationMessages()
-            for k in contributors
+            file_path: FileValidationMessages() for file_path in contributors
         }
 
         self.logger = get_app_logger()
 
-        for k in teams:
-            self._files[f"teams/{k.name}.toml"] = FileValidationMessages()
+        for file_path in teams:
+            self._files[file_path] = FileValidationMessages()
 
     def insert_error(self, error: ValidationError) -> None:
         """Insert a validation error into the per-file bucket."""

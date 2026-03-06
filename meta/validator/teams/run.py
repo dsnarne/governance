@@ -15,27 +15,27 @@ from meta.validator.teams.checks import (
 if TYPE_CHECKING:
     import httpx
 
-    from meta.validator.model import Contributor, EntityKey, Team
+    from meta.validator.model import Contributor, Team
     from meta.validator.reporter import Reporter
 
 TEAM_SCHEMA_PATH = "__meta/schemas/team.schema.json"
 
 
 def run_sync(
-    teams: dict[EntityKey, Team],
-    contributors: dict[EntityKey, Contributor],
+    teams: dict[str, Team],
+    contributors: dict[str, Contributor],
     reporter: Reporter,
 ) -> None:
     """Run synchronous team checks and record results in reporter."""
     ordering = load_schema_key_ordering(TEAM_SCHEMA_PATH)
-    reporter.insert_errors(validate_key_orderings(teams, ordering, kind="team"))
+    reporter.insert_errors(validate_key_orderings(teams, ordering))
     reporter.insert_errors(validate_team_file_names(teams))
     reporter.insert_errors(validate_maintainers_are_contributors(teams))
     reporter.insert_errors(validate_cross_references(contributors, teams))
 
 
 async def run_async(
-    teams: dict[EntityKey, Team],
+    teams: dict[str, Team],
     client: httpx.AsyncClient,
     reporter: Reporter,
 ) -> None:
