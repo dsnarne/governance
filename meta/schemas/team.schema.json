@@ -132,12 +132,12 @@
       "type": "object",
       "description": "A repository owned by the team.",
       "required": [
-        "slug",
+        "name",
         "description"
       ],
       "properties": {
-        "slug": {
-          "description": "GitHub repository slug (e.g. 'governance').",
+        "name": {
+          "description": "GitHub repository name (e.g. 'governance').",
           "type": "string",
           "pattern": "^[a-zA-Z0-9_.-]+$"
         },

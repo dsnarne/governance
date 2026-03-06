@@ -4,7 +4,7 @@ description = "The leadership team of Labrador."
 create-oidc-clients = false
 
 [[repos]]
-slug = "governance"
+name = "governance"
 description = """
 Definition and automation of the ScottyLabs Labrador GitHub
 organization's governance model.
