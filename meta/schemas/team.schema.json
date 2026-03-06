@@ -36,8 +36,7 @@
       "description": "The GitHub repositories owned by the team.",
       "items": {
         "$ref": "#/definitions/repo"
-      },
-      "uniqueItems": true
+      }
     },
     "membership": {
       "type": "array",
