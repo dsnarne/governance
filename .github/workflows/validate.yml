@@ -1,0 +1,44 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate-editorconfig:
+    name: Check EditorConfig Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install EditorConfig Checker
+        uses: taiki-e/install-action@v2
+        with:
+          tool: editorconfig-checker
+          fallback: none
+
+      - name: Check EditorConfig Compliance
+        run: editorconfig-checker --exclude ^LICENSE
+
+  validate-toml:
+    name: Validate TOML Files
+    needs: validate-editorconfig
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Taplo
+        uses: taiki-e/install-action@v2
+        with:
+          tool: taplo
+          fallback: none
+
+      - name: Validate TOML Formatting
+        run: taplo fmt --check
+
+      - name: Validate TOML Against Schemas
+        run: taplo check
