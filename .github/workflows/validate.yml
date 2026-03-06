@@ -27,7 +27,6 @@ jobs:
 
   validate-toml:
     name: Validate TOML Files
-    needs: validate-editorconfig
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
