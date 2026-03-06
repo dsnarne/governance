@@ -1,27 +1,5 @@
-"""Governance validator - Python port of the Rust validator."""
+"""Governance validator."""
 
-from .loader import load_contributors, load_schema_key_ordering, load_teams
-from .model import (
-    Contributor,
-    EntityKey,
-    FileValidationMessages,
-    Team,
-    ValidationError,
-    ValidationReport,
-    ValidationStatistics,
-    ValidationWarning,
-)
+from .main import main
 
-__all__ = [
-    "Contributor",
-    "EntityKey",
-    "FileValidationMessages",
-    "Team",
-    "ValidationError",
-    "ValidationReport",
-    "ValidationStatistics",
-    "ValidationWarning",
-    "load_contributors",
-    "load_schema_key_ordering",
-    "load_teams",
-]
+__all__ = ["main"]

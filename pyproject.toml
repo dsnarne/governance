@@ -3,7 +3,12 @@ name = "governance"
 version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = ["colorama>=0.4.6"]
+dependencies = [
+  "colorama>=0.4.6",
+  "dotenv>=0.9.9",
+  "httpx>=0.28.1",
+  "tomli>=2.4.0",
+]
 
 [dependency-groups]
 dev = [
@@ -18,7 +23,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["meta/validators", "meta/linter"]
+packages = ["meta/validator", "meta/linter"]
 include = ["meta/*"]
 
 [project.scripts]
@@ -30,3 +35,4 @@ lint.select = ["ALL"]
 
 [tool.mypy]
 strict = true
+explicit_package_bases = true
