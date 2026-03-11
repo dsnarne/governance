@@ -170,26 +170,6 @@ resource "keycloak_realm_user_profile" "userprofile" {
     }
   }
 
-  attribute {
-    name         = keycloak_ldap_user_attribute_mapper.creation_date.user_model_attribute
-    display_name = "Creation Date"
-
-    permissions {
-      view = local.view_permissions
-      edit = local.edit_permissions
-    }
-  }
-
-  attribute {
-    name         = keycloak_ldap_user_attribute_mapper.modify_date.user_model_attribute
-    display_name = "Modify Date"
-
-    permissions {
-      view = local.view_permissions
-      edit = local.edit_permissions
-    }
-  }
-
   group {
     name                = "user-metadata"
     display_header      = "User metadata"

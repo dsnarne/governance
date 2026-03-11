@@ -70,19 +70,6 @@ resource "keycloak_ldap_user_attribute_mapper" "colleges" {
   attribute_force_default     = true
 }
 
-resource "keycloak_ldap_user_attribute_mapper" "creation_date" {
-  realm_id                = keycloak_realm.labrador.id
-  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
-  name                    = "creation date"
-  user_model_attribute    = "createTimestamp"
-  ldap_attribute          = "whenCreated"
-
-  read_only                   = true
-  always_read_value_from_ldap = false
-  is_mandatory_in_ldap        = false
-  attribute_force_default     = true
-}
-
 resource "keycloak_ldap_user_attribute_mapper" "departments" {
   realm_id                = keycloak_realm.labrador.id
   ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
@@ -196,19 +183,6 @@ resource "keycloak_ldap_user_attribute_mapper" "middle_name" {
 
   read_only                   = true
   always_read_value_from_ldap = true
-  is_mandatory_in_ldap        = false
-  attribute_force_default     = true
-}
-
-resource "keycloak_ldap_user_attribute_mapper" "modify_date" {
-  realm_id                = keycloak_realm.labrador.id
-  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
-  name                    = "modify date"
-  user_model_attribute    = "modifyTimestamp"
-  ldap_attribute          = "whenChanged"
-
-  read_only                   = true
-  always_read_value_from_ldap = false
   is_mandatory_in_ldap        = false
   attribute_force_default     = true
 }
