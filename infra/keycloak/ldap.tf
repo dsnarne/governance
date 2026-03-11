@@ -173,3 +173,95 @@ resource "keycloak_ldap_user_attribute_mapper" "last_name" {
   is_mandatory_in_ldap        = true
   attribute_force_default     = true
 }
+
+resource "keycloak_ldap_user_attribute_mapper" "level" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "level"
+  user_model_attribute    = "level"
+  ldap_attribute          = "cmuStudentLevel"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = false
+  attribute_force_default     = true
+}
+
+resource "keycloak_ldap_user_attribute_mapper" "middle_name" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "middle name"
+  user_model_attribute    = "middleName"
+  ldap_attribute          = "cmuMiddleName"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = false
+  attribute_force_default     = true
+}
+
+resource "keycloak_ldap_user_attribute_mapper" "modify_date" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "modify date"
+  user_model_attribute    = "modifyTimestamp"
+  ldap_attribute          = "whenChanged"
+
+  read_only                   = true
+  always_read_value_from_ldap = false
+  is_mandatory_in_ldap        = false
+  attribute_force_default     = true
+}
+
+resource "keycloak_ldap_user_attribute_mapper" "orcid" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "orcid"
+  user_model_attribute    = "orcid"
+  ldap_attribute          = "eduPersonOrcid"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = false
+  attribute_force_default     = true
+}
+
+
+resource "keycloak_ldap_user_attribute_mapper" "primary_affiliation" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "primary affiliation"
+  user_model_attribute    = "primaryAffiliation"
+  ldap_attribute          = "eduPersonAffiliation"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = false
+  attribute_force_default     = true
+}
+
+resource "keycloak_ldap_user_attribute_mapper" "status" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "status"
+  user_model_attribute    = "status"
+  ldap_attribute          = "status"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = true
+  attribute_force_default     = true
+}
+
+resource "keycloak_ldap_user_attribute_mapper" "username" {
+  realm_id                = keycloak_realm.labrador.id
+  ldap_user_federation_id = keycloak_ldap_user_federation.cmu_ldap.id
+  name                    = "username"
+  user_model_attribute    = "username"
+  ldap_attribute          = "uid"
+
+  read_only                   = true
+  always_read_value_from_ldap = true
+  is_mandatory_in_ldap        = true
+  attribute_force_default     = true
+}
