@@ -22,7 +22,9 @@
       ],
       "admins": [
         "rushabhj"
-      ]
+      ],
+      "website": "https://collegecart.org",
+      "server": "https://api.collegecart.org"
     }
   }
 }

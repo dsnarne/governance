@@ -27,6 +27,8 @@ variable "teams_data" {
   type = map(object({
     members = list(string)
     admins  = list(string)
+    website = optional(string, "")
+    server  = optional(string, "")
   }))
 }
 

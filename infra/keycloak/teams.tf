@@ -39,7 +39,7 @@ resource "keycloak_group_memberships" "team_admins_memberships" {
 }
 
 # Team OIDC clients
-resource "keycloak_openid_client" "team_oidc_clients" {
+resource "keycloak_openid_client" "local_team_oidc_clients" {
   for_each  = local.team_slugs
   realm_id  = keycloak_realm.labrador.id
   client_id = "${each.key}-local"
@@ -50,6 +50,34 @@ resource "keycloak_openid_client" "team_oidc_clients" {
   root_url            = "http://localhost:3000"
   valid_redirect_uris = ["http://localhost/api/auth/oauth2/callback/keycloak"]
   web_origins         = ["http://localhost"]
+
+  # Capability config
+  standard_flow_enabled    = true
+  service_accounts_enabled = true
+
+  # Logout settings
+  frontchannel_logout_enabled = true
+}
+
+locals {
+  gtm_teams = {
+    for k, v in var.teams_data : k => v
+    if v.website != "" && v.server != ""
+  }
+}
+
+
+resource "keycloak_openid_client" "prod_team_oidc_clients" {
+  for_each  = local.gtm_teams
+  realm_id  = keycloak_realm.labrador.id
+  client_id = "${each.key}-prod"
+
+  access_type = "CONFIDENTIAL"
+
+  # Access settings
+  root_url            = each.value.website
+  valid_redirect_uris = ["${each.value.server}/api/auth/oauth2/callback/keycloak"]
+  web_origins         = [each.value.server]
 
   # Capability config
   standard_flow_enabled    = true
