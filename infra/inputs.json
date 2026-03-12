@@ -17,8 +17,12 @@
       "admins": []
     },
     "collegecart": {
-      "members": [],
-      "admins": []
+      "members": [
+        "rushabhj"
+      ],
+      "admins": [
+        "rushabhj"
+      ]
     }
   }
 }
