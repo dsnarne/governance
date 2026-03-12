@@ -83,8 +83,8 @@ resource "keycloak_openid_client" "team_oidc_clients" {
 # Include a `groups` claim in the token that includes the groups the user is a member of
 resource "keycloak_openid_group_membership_protocol_mapper" "group_membership_mapper" {
   realm_id   = keycloak_realm.labrador.id
-  for_each   = local.all_clients
-  client_id  = keycloak_openid_client.team_oidc_clients[each.value.client_id].id
+  for_each   = keycloak_openid_client.team_oidc_clients
+  client_id  = each.value.id
   name       = "group-membership-mapper"
   claim_name = "groups"
   full_path  = false
@@ -93,8 +93,18 @@ resource "keycloak_openid_group_membership_protocol_mapper" "group_membership_ma
 # Include the current client in the token's `aud` audience claim
 resource "keycloak_openid_audience_protocol_mapper" "audience_mapper" {
   realm_id                 = keycloak_realm.labrador.id
-  for_each                 = local.all_clients
-  client_id                = keycloak_openid_client.team_oidc_clients[each.value.client_id].id
+  for_each                 = keycloak_openid_client.team_oidc_clients
+  client_id                = each.value.id
   name                     = "audience-mapper"
   included_client_audience = each.value.client_id
+}
+
+# Include the `full_email` claim in the token
+resource "keycloak_openid_user_attribute_protocol_mapper" "full_email_mapper" {
+  realm_id       = keycloak_realm.labrador.id
+  for_each       = keycloak_openid_client.team_oidc_clients
+  client_id      = each.value.id
+  name           = "full-email-mapper"
+  user_attribute = "fullEmail"
+  claim_name     = "full_email"
 }
