@@ -26,13 +26,17 @@
     },
     "collegecart": {
       "members": [
-        "rushabhj"
+        "rushabhj",
+        "rkurihar",
+        "nayonk"
       ],
       "admins": [
-        "rushabhj"
+        "rushabhj",
+        "rkurihar",
+        "nayonk"
       ],
       "website": "https://collegecart.org",
-      "server": "https://api.collegecart.org"
+      "server": "https://collegecart.org"
     }
   }
 }
