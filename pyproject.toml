@@ -31,7 +31,7 @@ include = ["meta/*"]
 [project.scripts]
 validate = "validators:main"
 lint = "linter:main"
-sync-github = "synchronizers.github_synchronizer:main"
+sync-github = "synchronizers.github:main"
 
 [tool.ruff]
 lint.select = ["ALL"]

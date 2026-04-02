@@ -3,8 +3,9 @@ from http.client import UNPROCESSABLE_CONTENT
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from github import GithubException
 from logger import get_app_logger
+
+from github import GithubException
 
 if TYPE_CHECKING:
     from github import Github, Organization
