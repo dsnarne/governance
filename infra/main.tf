@@ -43,3 +43,17 @@ module "secrets" {
   # Data
   team_slugs = toset(keys(local.teams_data))
 }
+
+terraform {
+  required_providers {
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "github" {
+  owner = local.github_org
+  token = var.github_token
+}

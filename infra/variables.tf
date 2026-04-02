@@ -21,3 +21,9 @@ variable "vault_token" {
   type        = string
   sensitive   = true
 }
+
+variable "github_token" {
+  description = "GitHub token"
+  type        = string
+  sensitive   = true
+}
