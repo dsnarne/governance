@@ -26,10 +26,10 @@ def get_logger_config() -> dict[str, Any]:
         },
         "formatters": {
             color_formatter_name: {
-                "()": "logger.ColorFormatter",
+                "()": "meta.logger.ColorFormatter",
             },
         },
-        "filters": {filter_name: {"()": "logger.LogStatusFilter"}},
+        "filters": {filter_name: {"()": "meta.logger.LogStatusFilter"}},
     }
 
     return config

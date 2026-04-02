@@ -2,10 +2,11 @@ import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from logger import log_operation
+from meta.logger import log_operation
 
 if TYPE_CHECKING:
-    from github import Github, Organization
+    from github import Github
+    from github.Organization import Organization
 
 
 def sync_issue_types(g: Github, org: Organization) -> None:
@@ -25,7 +26,7 @@ def sync_issue_types(g: Github, org: Organization) -> None:
 
     # Read the existing issue types from the GitHub organization
     with log_operation("reading existing GitHub Organization issue types"):
-        [_, existing_issue_types] = g._Github__requester.requestJsonAndCheck(  # noqa: SLF001
+        [_, existing_issue_types] = g.requester.requestJsonAndCheck(
             "GET",
             f"/orgs/{org.login}/issue-types",
         )
@@ -42,7 +43,7 @@ def sync_issue_types(g: Github, org: Organization) -> None:
         # Create the issue type if it does not exist in the GitHub Organization
         if issue_type_name not in existing_issue_types:
             with log_operation(f"creating issue type {issue_type_name}"):
-                g._Github__requester.requestJsonAndCheck(  # noqa: SLF001
+                g.requester.requestJsonAndCheck(
                     "POST",
                     f"/orgs/{org.login}/issue-types",
                     input=issue_type,
@@ -62,7 +63,7 @@ def sync_issue_types(g: Github, org: Organization) -> None:
         # Since the issue type exists and is different from the existing issue
         # type, update it.
         with log_operation(f"updating issue type {issue_type_name}"):
-            g._Github__requester.requestJsonAndCheck(  # noqa: SLF001
+            g.requester.requestJsonAndCheck(
                 "PUT",
                 f"/orgs/{org.login}/issue-types/{existing_issue_type['id']}",
                 input=issue_type,
