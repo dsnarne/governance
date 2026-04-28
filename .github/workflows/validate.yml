@@ -47,6 +47,10 @@ jobs:
   validate-rules:
     name: Validate Rules
     runs-on: ubuntu-latest
+
+    env:
+      SYNC_GITHUB_TOKEN: ${{ secrets.SYNC_GITHUB_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
