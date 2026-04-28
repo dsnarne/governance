@@ -2,6 +2,7 @@
 
 import os
 from functools import lru_cache
+from typing import cast
 
 from keycloak import KeycloakAdmin
 
@@ -74,4 +75,4 @@ class KeycloakClient:
             return None
 
         # Used `exact` = True, so we should only have one user.
-        return users[0]["id"]  # type: ignore[no-any-return]
+        return cast("str | None", users[0]["id"])
