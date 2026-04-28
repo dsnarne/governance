@@ -1,0 +1,54 @@
+name: Validate PR Requirements
+
+on:
+  pull_request:
+
+jobs:
+  validate-requirements:
+    name: Validate PR Requirements
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get changed member and team files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            members/**
+            teams/**
+
+      - name: Validate member self-nomination
+        if: contains(steps.changed-files.outputs.added_files, 'members/')
+        run: |
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          for FILE in ${{ steps.changed-files.outputs.added_files }}; do
+            if [[ "$FILE" == members/* ]]; then
+              .github/scripts/validate-member.sh "$PR_AUTHOR" "$FILE"
+            fi
+          done
+
+      - name: Validate team creator is a lead
+        if: contains(steps.changed-files.outputs.added_files, 'teams/')
+        run: |
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          for FILE in ${{ steps.changed-files.outputs.added_files }}; do
+            if [[ "$FILE" == teams/* ]]; then
+              .github/scripts/validate-team.sh "$PR_AUTHOR" "$FILE"
+            fi
+          done
+
+      - name: Validate at most one member file is changed
+        if: contains(${{ steps.changed-files.outputs.all_changed_files }}, 'members/')
+        run: |
+          .github/scripts/validate-single-file-change.sh \
+            "members/" \
+            "${{ steps.changed-files.outputs.all_changed_files }}"
+
+      - name: Validate at most one team file is changed
+        if: contains(${{ steps.changed-files.outputs.all_changed_files }}, 'teams/')
+        run: |
+          .github/scripts/validate-single-file-change.sh \
+            "teams/" \
+            "${{ steps.changed-files.outputs.all_changed_files }}"
