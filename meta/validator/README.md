@@ -35,11 +35,10 @@ This README describes the checks performed by the validator, as well as other ch
   of our member list, and encourages active participation with our governance
   process and the organization. PRs in violation will be automatically rejected.
 
-- When adding a new team, the team members must have already been added in
-  previous PRs due to the earlier requirement on adding members.
-  For similar reasons, you must be a lead of any team you create.
+- When adding a new team, all team members must already exist in the `members/`
+  directory. The team creator must be a lead of the team's newest membership record.
 
-- Since you may only add one member and join only one team per PR,
+- Since you may only add yourself as a member and join only one team per PR,
   any PR that changes more than one file in the `members/` or `teams/`
   directories is automatically rejected.
 
