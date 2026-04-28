@@ -18,7 +18,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Run UV Lint
-        run: uv sync --only-dev && uv run lint
+        run: uv sync && uv run lint
 
   markdownlint:
     name: Markdown Lint
