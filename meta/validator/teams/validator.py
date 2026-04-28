@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import httpx
@@ -39,21 +38,8 @@ class TeamValidator:
 
     def validate_sync(self) -> None:
         """Run synchronous team checks."""
-        self.validate_team_file_names()
         self.validate_maintainers_are_contributors()
         self.validate_cross_references()
-
-    def validate_team_file_names(self) -> None:
-        """Validate that team file names match slug."""
-        for file_path, team in self.teams.items():
-            file_stem = Path(file_path).stem
-            if file_stem == team.slug:
-                continue
-
-            self.reporter.insert_error(
-                file_path,
-                f"Team file name '{file_stem}' doesn't match slug '{team.slug}'",
-            )
 
     def validate_maintainers_are_contributors(self) -> None:
         """Ensure every maintainer is also listed as a contributor."""

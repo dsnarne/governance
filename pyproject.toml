@@ -28,7 +28,7 @@ build-backend = "hatchling.build"
 include = ["meta/*"]
 
 [project.scripts]
-validate = "meta.validators:main"
+validate = "meta.validator:main"
 lint = "meta.linter:main"
 sync-github = "meta.synchronizers.github:main"
 

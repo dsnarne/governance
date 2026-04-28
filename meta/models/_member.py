@@ -6,3 +6,4 @@ class Member(BaseModel):
 
     full_name: str = Field(alias="full-name")
     andrew_id: str | None = Field(alias="andrew-id", default=None)
+    file_path: str
