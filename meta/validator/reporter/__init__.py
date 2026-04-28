@@ -49,3 +49,6 @@ class Reporter:
             raise SystemExit(1)
 
         self.logger.success("Validation passed!")
+
+
+__all__ = ["Reporter"]

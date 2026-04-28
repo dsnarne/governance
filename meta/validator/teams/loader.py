@@ -8,7 +8,7 @@ from meta.models import Team
 from meta.validator.shared import KeyOrdering
 
 if TYPE_CHECKING:
-    from meta.validator.shared.reporter import Reporter
+    from meta.validator.reporter import Reporter
 
 TEAMS_GLOB = "teams/*.toml"
 TEAM_SCHEMA_PATH = "meta/schemas/team.schema.json"

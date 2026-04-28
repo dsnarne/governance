@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from meta.validator.members.loader import load_members
-from meta.validator.shared.reporter import Reporter
+from meta.validator.reporter import Reporter
 from meta.validator.teams.loader import load_teams
 from meta.validator.teams.validator import TeamValidator
 

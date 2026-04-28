@@ -5,7 +5,7 @@ from __future__ import annotations
 from dotenv import load_dotenv
 
 from meta.validator.members import MemberValidator, load_members
-from meta.validator.shared.reporter import Reporter
+from meta.validator.reporter import Reporter
 from meta.validator.teams import TeamValidator, load_teams
 
 

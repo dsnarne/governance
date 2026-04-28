@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from meta.models import Member
-    from meta.validator.shared.reporter import Reporter
+    from meta.validator.reporter import Reporter
 
 
 class MemberValidator:
