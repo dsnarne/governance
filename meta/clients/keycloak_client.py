@@ -1,3 +1,5 @@
+"""Keycloak client."""
+
 import os
 from functools import lru_cache
 
@@ -11,10 +13,15 @@ KEYCLOAK_USERNAME = "admin"
 
 @lru_cache(maxsize=1)
 def get_keycloak_client() -> KeycloakClient:
+    """Get the Keycloak client. Cache the result for reuse across the app."""
     return KeycloakClient()
 
+
 class KeycloakClient:
+    """Keycloak client."""
+
     def __init__(self) -> None:
+        """Create a Keycloak client."""
         self.logger = get_app_logger()
 
         server_url = os.getenv("KEYCLOAK_SERVER_URL")
@@ -57,8 +64,8 @@ class KeycloakClient:
             verify=True,
         )
 
-
     def get_user_id_by_username(self, username: str) -> str | None:
+        """Get the Keycloak user ID by username."""
         users = self.keycloak_admin.get_users(
             query={"username": username, "exact": True},
         )
@@ -67,4 +74,4 @@ class KeycloakClient:
             return None
 
         # Used `exact` = True, so we should only have one user.
-        return users[0]["id"] # type: ignore
+        return users[0]["id"]  # type: ignore[no-any-return]

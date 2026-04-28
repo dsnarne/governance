@@ -94,5 +94,3 @@ class MemberValidator:
                     andrew_id,
                 )
                 sys.exit(1)
-
-
