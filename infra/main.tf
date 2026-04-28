@@ -23,6 +23,10 @@ module "keycloak" {
   github_client_id     = var.github_client_id
   github_client_secret = var.github_client_secret
 
+  # Slack IDP credentials
+  slack_client_id     = var.slack_client_id
+  slack_client_secret = var.slack_client_secret
+
   # Data
   leadership_data = local.leadership_data
   teams_data      = local.teams_data

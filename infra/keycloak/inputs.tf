@@ -82,3 +82,15 @@ variable "github_client_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "slack_client_id" {
+  description = "Slack client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "slack_client_secret" {
+  description = "Slack client secret"
+  type        = string
+  sensitive   = true
+}
