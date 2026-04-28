@@ -71,3 +71,14 @@ variable "secrets_url" {
   type        = string
 }
 
+variable "github_client_id" {
+  description = "GitHub client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_client_secret" {
+  description = "GitHub client secret"
+  type        = string
+  sensitive   = true
+}

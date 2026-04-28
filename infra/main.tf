@@ -1,10 +1,9 @@
 module "keycloak" {
   source = "./keycloak"
 
-  # Credentials
-  cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
-  keycloak_client_id       = var.keycloak_client_id
-  keycloak_client_secret   = var.keycloak_client_secret
+  # Provider credentials
+  keycloak_client_id     = var.keycloak_client_id
+  keycloak_client_secret = var.keycloak_client_secret
 
   # URLs
   keycloak_realm_url = var.keycloak_realm_url
@@ -16,6 +15,13 @@ module "keycloak" {
   # Group names
   admin_group_suffix    = var.admin_group_suffix
   leadership_group_name = var.leadership_group_name
+
+  # LDAP credentials
+  cmu_ldap_bind_credential = var.cmu_ldap_bind_credential
+
+  # GitHub IDP credentials
+  github_client_id     = var.github_client_id
+  github_client_secret = var.github_client_secret
 
   # Data
   leadership_data = local.leadership_data

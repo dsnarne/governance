@@ -57,3 +57,15 @@ variable "admin_group_suffix" {
   type        = string
   default     = "admins"
 }
+
+variable "github_client_id" {
+  description = "GitHub IDP client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_client_secret" {
+  description = "GitHub IDP client secret"
+  type        = string
+  sensitive   = true
+}
