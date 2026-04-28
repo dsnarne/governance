@@ -188,7 +188,6 @@ dependencies = [
     { name = "dotenv" },
     { name = "httpx" },
     { name = "pydantic" },
-    { name = "pygithub" },
 ]
 
 [package.dev-dependencies]
@@ -198,6 +197,9 @@ dev = [
     { name = "ty" },
     { name = "types-colorama" },
 ]
+validator = [
+    { name = "pygithub" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -205,7 +207,6 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.12.5" },
-    { name = "pygithub", specifier = ">=2.9.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -215,6 +216,7 @@ dev = [
     { name = "ty", specifier = ">=0.0.20" },
     { name = "types-colorama", specifier = ">=0.4.15.20250801" },
 ]
+validator = [{ name = "pygithub", specifier = ">=2.9.0" }]
 
 [[package]]
 name = "h11"
