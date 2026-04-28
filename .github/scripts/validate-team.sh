@@ -14,7 +14,7 @@ pr_author = sys.argv[2]
 with open(team_file, "rb") as f:
     data = tomllib.load(f)
 
-leads = data.get("leads", [])
+leads = data["membership"][0]["leads"]
 if pr_author not in leads:
     sys.exit(1)
 PY
