@@ -22,3 +22,21 @@ jobs:
 
       - name: Sync Codeowners
         run: uv run --frozen --no-dev --group codeowners-synchronizer sync-codeowners
+
+  sync-slack:
+    name: Sync Slack
+    runs-on: ubuntu-latest
+
+    env:
+      SLACK_USER_TOKEN: ${{ secrets.SLACK_USER_TOKEN }}
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Sync Slack
+        run: uv run --frozen --no-dev --group slack-synchronizer sync-slack
