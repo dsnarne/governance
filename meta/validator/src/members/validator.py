@@ -32,16 +32,11 @@ class MemberValidator:
         self.logger = get_app_logger()
 
     def validate(self) -> None:
-        """Validate all contributors.
+        """Validate all contributors."""
+        self.validate_github()
+        self.validate_keycloak()
 
-        This includes:
-        - Validating that the GitHub username is valid
-        - Validating that the Andrew ID maps to a user in Keycloak
-        """
-        self.validate_github_username()
-        self.validate_keycloak_username()
-
-    def validate_github_username(self) -> None:
+    def validate_github(self) -> None:
         """Validate that the GitHub username is valid with GitHub API."""
         github_client = get_github_client()
         for github_username in self.members:
@@ -72,7 +67,7 @@ class MemberValidator:
                 )
                 sys.exit(1)
 
-    def validate_keycloak_username(self) -> None:
+    def validate_keycloak(self) -> None:
         """Validate that the Andrew ID maps to a user in Keycloak."""
         keycloak_client = get_keycloak_client()
         for github_username, member in self.members.items():
@@ -86,7 +81,7 @@ class MemberValidator:
                     self.reporter.insert_error(
                         member.file_path,
                         ErrorCode.INVALID_KEYCLOAK_USERNAME,
-                        f"User {andrew_id} not found in Keycloak!",
+                        f"User {andrew_id} not found in Keycloak",
                     )
                     continue
 
@@ -106,13 +101,24 @@ class MemberValidator:
                     self.reporter.insert_error(
                         member.file_path,
                         ErrorCode.MISMATCHED_KEYCLOAK_GITHUB,
-                        f"User {andrew_id} linked to a different GitHub username in "
-                        f"Keycloak: {keycloak_github_username} != {github_username}!",
+                        f"User {andrew_id} linked to a different GitHub account in "
+                        f"Keycloak: {keycloak_github_username} != {github_username}",
                     )
                     continue
+
+                slack_id = keycloak_client.get_user_slack_id(user)
+                if slack_id is None:
+                    self.reporter.insert_error(
+                        member.file_path,
+                        ErrorCode.MISSING_KEYCLOAK_SLACK,
+                        f"User {andrew_id} is not linked to a Slack account in "
+                        f"Keycloak",
+                    )
+                    continue
+
             except Exception:
                 self.logger.exception(
-                    "Error validating Keycloak username: %s",
+                    "Error validating Keycloak: %s",
                     andrew_id,
                 )
                 sys.exit(1)

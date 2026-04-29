@@ -88,3 +88,15 @@ class KeycloakClient:
                 return cast("str", login["userName"])
 
         return None
+
+    def get_user_slack_id(self, user_id: str) -> str | None:
+        """Get the Slack ID by Keycloak user ID."""
+        social_logins = self.keycloak_admin.get_user_social_logins(user_id=user_id)
+        if not social_logins:
+            return None
+
+        for login in social_logins:
+            if login["identityProvider"] == "slack":
+                return cast("str", login["userId"])
+
+        return None

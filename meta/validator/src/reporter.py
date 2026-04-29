@@ -21,6 +21,7 @@ class ErrorCode(Enum):
     INVALID_KEYCLOAK_USERNAME = "Invalid Keycloak username"
     MISSING_KEYCLOAK_GITHUB = "Missing GitHub username in Keycloak"
     MISMATCHED_KEYCLOAK_GITHUB = "Mismatched GitHub username in Keycloak"
+    MISSING_KEYCLOAK_SLACK = "Missing Slack ID in Keycloak"
 
 
 class Reporter:
