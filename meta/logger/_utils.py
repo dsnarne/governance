@@ -1,10 +1,16 @@
 from contextlib import contextmanager
-from typing import TYPE_CHECKING
+from functools import wraps
+from typing import TYPE_CHECKING, ParamSpec, TypeVar
+
+from meta.models import Team
 
 from ._app_logger import get_app_logger
 
+P = ParamSpec("P")
+R = TypeVar("R")
+
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
 
 
 def print_section(section: str) -> None:
@@ -30,3 +36,29 @@ def log_operation(operation_name: str) -> Generator[None]:
     except Exception:
         logger.exception("Failed to %s", operation_name)
         raise
+
+
+def log_team_sync() -> Callable[[Callable[P, R]], Callable[P, R]]:
+    def decorator(func: Callable[P, R]) -> Callable[P, R]:
+        """Decorate a team sync function to log around it.
+
+        Team should always be the second argument of the team sync function.
+        """
+
+        @wraps(func)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+            team = args[1]
+            if not isinstance(team, Team):
+                # Raise an error here since this is purely a programming error
+                msg = "Second argument must be a Team"
+                raise TypeError(msg)
+
+            logger = get_app_logger()
+            logger.print_bold("Syncing team %s...\n", team.name)
+            result = func(*args, **kwargs)
+            logger.print("")
+            return result
+
+        return wrapper
+
+    return decorator
