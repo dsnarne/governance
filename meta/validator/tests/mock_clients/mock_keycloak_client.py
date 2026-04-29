@@ -9,19 +9,21 @@ if TYPE_CHECKING:
 
 
 class MockKeycloakClientValid:
-    """Mock Keycloak client; optional per-Andrew GitHub login overrides."""
+    """Mock Keycloak client; optional per-Andrew GitHub and Slack overrides."""
 
     def __init__(
         self,
         *,
         github_username_by_andrew_id: dict[str, str] | None = None,
+        slack_id_by_andrew_id: dict[str, str] | None = None,
     ) -> None:
         """Create a mock client.
 
-        When ``github_username_by_andrew_id`` is omitted, the linked GitHub login for a
-        user is assumed to equal their Andrew ID (matches ``valid`` / ``alice`` tests).
+        When lookups are omitted, GitHub login and Slack id default from Andrew ID
+        (matches ``valid`` / ``alice`` tests where stem equals ``andrew-id``).
         """
         self._github_username_by_andrew_id = github_username_by_andrew_id
+        self._slack_id_by_andrew_id = slack_id_by_andrew_id
         self._andrew_id_by_user_id: dict[str, str] = {}
 
     def get_user_id_by_username(self, andrew_id: str) -> str:
@@ -39,6 +41,15 @@ class MockKeycloakClientValid:
             return self._github_username_by_andrew_id.get(andrew_id)
         return andrew_id
 
+    def get_user_slack_id(self, user_id: str) -> str | None:
+        """Return a synthetic Slack member id for the Keycloak user."""
+        andrew_id = self._andrew_id_by_user_id.get(user_id)
+        if andrew_id is None:
+            return None
+        if self._slack_id_by_andrew_id is not None:
+            return self._slack_id_by_andrew_id.get(andrew_id)
+        return f"U-{andrew_id}"
+
 
 class MockKeycloakClientUserNotFound:
     """Mock Keycloak client that reports no matching user."""
@@ -48,6 +59,10 @@ class MockKeycloakClientUserNotFound:
         return None
 
     def get_user_github_username(self, _user_id: str) -> str | None:
+        """Unused when the user does not exist; satisfy the client surface."""
+        return None
+
+    def get_user_slack_id(self, _user_id: str) -> str | None:
         """Unused when the user does not exist; satisfy the client surface."""
         return None
 
@@ -64,6 +79,10 @@ class MockKeycloakClientUnexpectedError:
         """Unused when user lookup fails first."""
         return None
 
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Unused when user lookup fails first."""
+        return None
+
 
 class MockKeycloakClientMissingGithub:
     """User exists in Keycloak but has no GitHub identity provider link."""
@@ -74,6 +93,10 @@ class MockKeycloakClientMissingGithub:
 
     def get_user_github_username(self, _user_id: str) -> str | None:
         """Emulate a user with no GitHub federated identity."""
+        return None
+
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Unused when GitHub validation fails first."""
         return None
 
 
@@ -88,6 +111,10 @@ class MockKeycloakClientMismatchedGithub:
         """Return a login that will not match the member file stem."""
         return "someone-else"
 
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Unused when GitHub mismatch is reported first."""
+        return None
+
 
 class MockKeycloakClientGithubUnexpectedError:
     """User id resolves; reading the GitHub link raises."""
@@ -101,6 +128,55 @@ class MockKeycloakClientGithubUnexpectedError:
         msg = "unexpected keycloak github link failure"
         raise RuntimeError(msg)
 
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Unused when GitHub read fails first."""
+        return None
+
+
+class MockKeycloakClientMissingSlack:
+    """GitHub link matches; Slack id is missing."""
+
+    def __init__(self) -> None:
+        """Initialize per-user id mapping for GitHub answers."""
+        self._andrew_id_by_user_id: dict[str, str] = {}
+
+    def get_user_id_by_username(self, andrew_id: str) -> str:
+        """Return a synthetic Keycloak user id."""
+        user_id = f"kc-user-{andrew_id}"
+        self._andrew_id_by_user_id[user_id] = andrew_id
+        return user_id
+
+    def get_user_github_username(self, user_id: str) -> str | None:
+        """Return the Andrew id as GitHub login (same as default fixture layout)."""
+        return self._andrew_id_by_user_id.get(user_id)
+
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Emulate no Slack federated identity."""
+        return None
+
+
+class MockKeycloakClientSlackUnexpectedError:
+    """GitHub checks pass; reading Slack from Keycloak raises."""
+
+    def __init__(self) -> None:
+        """Initialize per-user id mapping for GitHub answers."""
+        self._andrew_id_by_user_id: dict[str, str] = {}
+
+    def get_user_id_by_username(self, andrew_id: str) -> str:
+        """Return a synthetic Keycloak user id."""
+        user_id = f"kc-user-{andrew_id}"
+        self._andrew_id_by_user_id[user_id] = andrew_id
+        return user_id
+
+    def get_user_github_username(self, user_id: str) -> str | None:
+        """Return the Andrew id as GitHub login."""
+        return self._andrew_id_by_user_id.get(user_id)
+
+    def get_user_slack_id(self, _user_id: str) -> str | None:
+        """Raise to emulate Keycloak API failure on Slack read."""
+        msg = "unexpected keycloak slack link failure"
+        raise RuntimeError(msg)
+
 
 type MockKeycloakClient = (
     MockKeycloakClientValid
@@ -109,6 +185,8 @@ type MockKeycloakClient = (
     | MockKeycloakClientMissingGithub
     | MockKeycloakClientMismatchedGithub
     | MockKeycloakClientGithubUnexpectedError
+    | MockKeycloakClientMissingSlack
+    | MockKeycloakClientSlackUnexpectedError
 )
 
 

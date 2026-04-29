@@ -22,6 +22,8 @@ from meta.validator.tests.mock_clients.mock_keycloak_client import (
     MockKeycloakClientGithubUnexpectedError,
     MockKeycloakClientMismatchedGithub,
     MockKeycloakClientMissingGithub,
+    MockKeycloakClientMissingSlack,
+    MockKeycloakClientSlackUnexpectedError,
     MockKeycloakClientUnexpectedError,
     MockKeycloakClientUserNotFound,
     MockKeycloakClientValid,
@@ -289,6 +291,61 @@ def test_unexpected_keycloak_github_link_error_exits(
 
     mock_github = MockGithubClientValid()
     mock_keycloak = MockKeycloakClientGithubUnexpectedError()
+    monkeypatch.setattr(
+        members_validator,
+        "get_github_client",
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
+    )
+
+    with pytest.raises(SystemExit, match="1"):
+        MemberValidator(members, reporter).validate()
+
+
+def test_missing_keycloak_slack(monkeypatch: MonkeyPatch) -> None:
+    """A Keycloak user without Slack federation is an error."""
+    reporter = Reporter()
+    members = load_members(
+        reporter,
+        "meta/validator/tests/members/for_teams/alice.toml",
+    )
+    assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientMissingSlack()
+    monkeypatch.setattr(
+        members_validator,
+        "get_github_client",
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
+    )
+
+    MemberValidator(members, reporter).validate()
+
+    assert has_error(reporter, ErrorCode.MISSING_KEYCLOAK_SLACK)
+
+
+def test_unexpected_keycloak_slack_link_error_exits(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    """Errors while reading Slack from Keycloak should abort validation."""
+    reporter = Reporter()
+    members = load_members(
+        reporter,
+        "meta/validator/tests/members/for_teams/alice.toml",
+    )
+    assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientSlackUnexpectedError()
     monkeypatch.setattr(
         members_validator,
         "get_github_client",
