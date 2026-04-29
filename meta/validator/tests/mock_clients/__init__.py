@@ -7,11 +7,21 @@ from .mock_github_client import (
     MockGithubClientValid,
     make_get_github_client,
 )
+from .mock_keycloak_client import (
+    MockKeycloakClientUnexpectedError,
+    MockKeycloakClientUserNotFound,
+    MockKeycloakClientValid,
+    make_get_keycloak_client,
+)
 
 __all__ = [
     "MockGithubClientNotFound",
     "MockGithubClientRateLimitExceeded",
     "MockGithubClientUnexpectedError",
     "MockGithubClientValid",
+    "MockKeycloakClientUnexpectedError",
+    "MockKeycloakClientUserNotFound",
+    "MockKeycloakClientValid",
     "make_get_github_client",
+    "make_get_keycloak_client",
 ]

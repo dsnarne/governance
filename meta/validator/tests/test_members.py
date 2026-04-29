@@ -18,21 +18,34 @@ from meta.validator.tests.mock_clients.mock_github_client import (
     MockGithubClientValid,
     make_get_github_client,
 )
+from meta.validator.tests.mock_clients.mock_keycloak_client import (
+    MockKeycloakClientUnexpectedError,
+    MockKeycloakClientUserNotFound,
+    MockKeycloakClientValid,
+    make_get_keycloak_client,
+)
 
 if TYPE_CHECKING:
     from _pytest.monkeypatch import MonkeyPatch
 
+
 def test_member_valid(monkeypatch: MonkeyPatch) -> None:
     """Members must be valid."""
-    mock_client = MockGithubClientValid()
-
     reporter = Reporter()
     members = load_members(reporter, "meta/validator/tests/members/valid.toml")
     assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientValid()
     monkeypatch.setattr(
         members_validator,
         "get_github_client",
-        make_get_github_client(mock_client),
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
     )
     MemberValidator(members, reporter).validate()
     assert no_errors(reporter)
@@ -63,11 +76,17 @@ def test_not_found_github_username(
     )
     assert no_errors(reporter)
 
-    mock_client = MockGithubClientNotFound()
+    mock_github = MockGithubClientNotFound()
+    mock_keycloak = MockKeycloakClientValid()
     monkeypatch.setattr(
         members_validator,
         "get_github_client",
-        make_get_github_client(mock_client),
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
     )
 
     MemberValidator(members, reporter).validate()
@@ -86,11 +105,11 @@ def test_rate_limited_github_username(
     )
     assert no_errors(reporter)
 
-    mock_client = MockGithubClientRateLimitExceeded()
+    mock_github = MockGithubClientRateLimitExceeded()
     monkeypatch.setattr(
         members_validator,
         "get_github_client",
-        make_get_github_client(mock_client),
+        make_get_github_client(mock_github),
     )
 
     with pytest.raises(SystemExit, match="1"):
@@ -108,12 +127,93 @@ def test_unexpected_github_client_error_exits(
     )
     assert no_errors(reporter)
 
-    mock_client = MockGithubClientUnexpectedError()
+    mock_github = MockGithubClientUnexpectedError()
     monkeypatch.setattr(
         members_validator,
         "get_github_client",
-        make_get_github_client(mock_client),
+        make_get_github_client(mock_github),
     )
 
     with pytest.raises(SystemExit, match="1"):
         MemberValidator(members, reporter).validate()
+
+
+def test_not_found_keycloak_username(monkeypatch: MonkeyPatch) -> None:
+    """A missing Keycloak user should be reported as ``INVALID_KEYCLOAK_USERNAME``."""
+    reporter = Reporter()
+    members = load_members(
+        reporter,
+        "meta/validator/tests/members/for_teams/alice.toml",
+    )
+    assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientUserNotFound()
+    monkeypatch.setattr(
+        members_validator,
+        "get_github_client",
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
+    )
+
+    MemberValidator(members, reporter).validate()
+
+    assert has_error(reporter, ErrorCode.INVALID_KEYCLOAK_USERNAME)
+
+
+def test_unexpected_keycloak_client_error_exits(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    """Unexpected Keycloak errors should hit generic ``except Exception`` and exit."""
+    reporter = Reporter()
+    members = load_members(
+        reporter,
+        "meta/validator/tests/members/for_teams/alice.toml",
+    )
+    assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientUnexpectedError()
+    monkeypatch.setattr(
+        members_validator,
+        "get_github_client",
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
+    )
+
+    with pytest.raises(SystemExit, match="1"):
+        MemberValidator(members, reporter).validate()
+
+
+def test_skips_keycloak_when_no_andrew_id(monkeypatch: MonkeyPatch) -> None:
+    """Members without ``andrew-id`` should not trigger Keycloak username checks."""
+    reporter = Reporter()
+    members = load_members(
+        reporter,
+        "meta/validator/tests/members/no-andrew-id.toml",
+    )
+    assert no_errors(reporter)
+
+    mock_github = MockGithubClientValid()
+    mock_keycloak = MockKeycloakClientUnexpectedError()
+    monkeypatch.setattr(
+        members_validator,
+        "get_github_client",
+        make_get_github_client(mock_github),
+    )
+    monkeypatch.setattr(
+        members_validator,
+        "get_keycloak_client",
+        make_get_keycloak_client(mock_keycloak),
+    )
+
+    MemberValidator(members, reporter).validate()
+    assert no_errors(reporter)
