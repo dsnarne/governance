@@ -22,6 +22,7 @@ class ErrorCode(Enum):
     MISSING_KEYCLOAK_GITHUB = "Missing GitHub username in Keycloak"
     MISMATCHED_KEYCLOAK_GITHUB = "Mismatched GitHub username in Keycloak"
     MISSING_KEYCLOAK_SLACK = "Missing Slack ID in Keycloak"
+    GITHUB_REPO_NOT_FOUND = "GitHub repository not found"
 
 
 class Reporter:

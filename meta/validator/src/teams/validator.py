@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 import httpx
+from github import GithubException
 
+from meta.clients.github_client import get_github_client
 from meta.validator.src.reporter import ErrorCode
 
 if TYPE_CHECKING:
@@ -40,17 +43,18 @@ class TeamValidator:
 
     def validate_sync(self) -> None:
         """Run synchronous team checks."""
-        self.validate_maintainers_are_contributors()
+        self.validate_leads_are_members()
         self.validate_cross_references()
+        self.validate_github_repos_exist()
 
-    def validate_maintainers_are_contributors(self) -> None:
-        """Ensure every maintainer is also listed as a contributor."""
-        for team_file, team in self.teams.items():
+    def validate_leads_are_members(self) -> None:
+        """Ensure every lead is also listed as a member."""
+        for team in self.teams.values():
             member_set = set(team.members)
             for lead in team.leads:
                 if lead not in member_set:
                     self.reporter.insert_error(
-                        team_file,
+                        team.file_path,
                         ErrorCode.LEAD_CROSS_REFERENCE,
                         f"Lead {lead!r} missing from members",
                     )
@@ -65,3 +69,19 @@ class TeamValidator:
                         ErrorCode.MEMBER_CROSS_REFERENCE,
                         f"Unknown member: {member}",
                     )
+
+    def validate_github_repos_exist(self) -> None:
+        """Ensure that all GitHub repositories exist."""
+        github_client = get_github_client()
+        for team in self.teams.values():
+            for repo in team.repos:
+                try:
+                    repo_name = "scottylabs-labrador/" + repo
+                    github_client.get_repo(repo_name)
+                except GithubException as e:
+                    if e.status == HTTPStatus.NOT_FOUND:
+                        self.reporter.insert_error(
+                            team.file_path,
+                            ErrorCode.GITHUB_REPO_NOT_FOUND,
+                            f"GitHub repository {repo_name} not found",
+                        )
