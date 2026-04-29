@@ -1,13 +1,10 @@
-name = "Labrador Leadership"
-description = "The leadership team of Labrador."
+name = "Leadership"
+description = "The Labrador leadership team."
 create-oidc-clients = false
 
 [[repos]]
-name = "governance"
-description = """
-Definition and automation of the ScottyLabs Labrador GitHub
-organization's governance model.
-"""
+name = "wiki"
+description = "A central hub for ScottyLabs Labrador documentations"
 
 [[membership]]
 timeframe = "2026-2027"
