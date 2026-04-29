@@ -19,6 +19,9 @@ if TYPE_CHECKING:
     from meta.validator.src.reporter import Reporter
 
 
+GITHUB_ORG_NAME = "ScottyLabs-Labrador"
+
+
 class TeamValidationError(Exception):
     """Raised when validation fails in a way that should abort the run."""
 
@@ -91,7 +94,7 @@ class TeamValidator:
         github_client = get_github_client()
         for repo in team.repos:
             try:
-                repo_name = "scottylabs-labrador/" + repo
+                repo_name = f"{GITHUB_ORG_NAME}/{repo}"
                 github_client.get_repo(repo_name)
             except GithubException as e:
                 if e.status == HTTPStatus.NOT_FOUND:

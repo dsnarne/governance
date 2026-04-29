@@ -5,28 +5,28 @@ This README describes the checks performed by the validator, as well as other ch
 
 ## Validator Checks
 
-- The key orderings in a TOML file must match the the ordering of `properties` in the
-  corresponding schema file.
+### TOML Files
+
+- The field orderings in a TOML file must match the the ordering of `properties`
+  in the corresponding JSON schema file.
 
 ### Members
 
-- The `github-username` field for a member must be a valid GitHub username.
+- The member's filename must be a valid GitHub username.
 
-- The `andrew-id` field for a member
+- The member's `andrew-id` field must match the username of a user in Keycloak.
 
-  - must match the username of a user in Keycloak.
-
-  - must match the email of a user in Slack.
+- The member's Keycloak user must be linked to a GitHub account and a Slack account,
+  and the GitHub username must match the member's filename.
 
 ### Teams
 
-- The `slug` field for teams must match the filename.
-
 - All leads in a team must also be listed as members.
 
-- All team members must exist in the `members/` directory.
+- All team members must be listed in the `members/` directory.
 
-- GitHub repositories must exist and be unique in a list.
+- Each team repository must exist as a GitHub repository in the
+  [ScottyLabs-Labrador](https://github.com/ScottyLabs-Labrador) organization.
 
 ## Bash Script Checks
 
@@ -41,6 +41,9 @@ This README describes the checks performed by the validator, as well as other ch
 - Since you may only add yourself as a member and join only one team per PR,
   any PR that changes more than one file in the `members/` or `teams/`
   directories is automatically rejected.
+
+_Note: See bash scripts in the [.github/scripts/](../../.github/scripts/)_
+_directory for more details._
 
 ## Check EditorConfig Compliance
 
@@ -57,7 +60,7 @@ You can also run the check locally by installing [editorconfig-checker](
 We use [Taplo](https://taplo.tamasfe.dev/) to validate the TOML files against
 the schemas defined in the `__meta/schemas/` directory. The VSCode extension
 [tamasfe.even-better-toml](
-  https://marketplace.visualstudio.com/items?itemName=tamasfeeven-better-toml
+  https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml
 ) will show red squiggles in the editor for errors. You can also run the check
 locally by installing [taplo-cli](https://taplo.tamasfe.dev/cli/introduction.html)
 and running `taplo fmt --check` and `taplo check`.
