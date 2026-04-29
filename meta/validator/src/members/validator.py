@@ -84,9 +84,6 @@ class MemberValidator:
                 )
                 return
 
-            error_message = f"Unexpected GitHub API error status: {e.status}"
-            raise MemberValidationError(error_message) from e
-        except Exception as e:
             error_message = f"Unexpected GitHub API error: {e}"
             raise MemberValidationError(error_message) from e
 
