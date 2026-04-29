@@ -12,10 +12,9 @@ dev = [
   "ty>=0.0.20",
   "types-colorama>=0.4.15.20250801",
 ]
-
 test = ["pytest>=8.3.5", "pytest-cov>=7.1.0"]
-
 validator = ["httpx>=0.28.1", "pygithub>=2.9.0", "python-keycloak>=7.1.0"]
+codeowners-synchronizer = ["pygithub>=2.9.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -29,6 +28,7 @@ exclude = ["meta/*/tests/**"]
 validate = "meta.validator.src:main"
 test = "meta.tests:main"
 lint = "meta.linter:main"
+sync-codeowners = "meta.synchronizers.codeowners:main"
 
 [tool.ruff]
 lint.select = ["ALL"]

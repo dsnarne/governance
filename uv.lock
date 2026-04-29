@@ -250,6 +250,9 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+codeowners-synchronizer = [
+    { name = "pygithub" },
+]
 dev = [
     { name = "mypy" },
     { name = "ruff" },
@@ -274,6 +277,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+codeowners-synchronizer = [{ name = "pygithub", specifier = ">=2.9.0" }]
 dev = [
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "ruff", specifier = ">=0.15.5" },
