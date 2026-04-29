@@ -1,12 +1,12 @@
-# Auto-generated CODEOWNERS file from __meta/synchronizer/synchronizer/services/sync_codeowners.py
+# Auto-generated CODEOWNERS file from meta/synchronizers/codeowners.py
 
-# Default owners are the maintainers of the governance team
+# Default owners are the Governance team leads
 * @Yuxiang-Huang
 
-# Default owner of the teams directory is the leadership team
+# Owners of the `teams/` directory are the leadership team leads
 teams @Yuxiang-Huang
 
-# The codeowners of each team file are the maintainers of the team
+# The codeowners of each team file are their corresponding leads
 
 teams/governance.toml @Yuxiang-Huang
 
