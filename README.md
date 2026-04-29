@@ -21,7 +21,6 @@ The rest of the documentation is for maintainers of this repository.
 │   ├── clients        # Python API clients
 │   ├── validator      # Validation tools for the TOML files
 │   ├── synchronizers  # Permission synchronizers
-│   ├── generator      # Combines TOML files to generate a JSON file for infra/
 │   ├── linter         # Python-based linter
 │   └── logger         # Python-based logger
 └── teams              # Team TOML files
