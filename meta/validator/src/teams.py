@@ -12,11 +12,13 @@ from github import GithubException
 
 from meta.clients.github_client import get_github_client
 from meta.logger import get_app_logger
-from meta.reporter import ErrorCode
+
+from .reporter import ErrorCode
 
 if TYPE_CHECKING:
     from meta.models import Member, Team
-    from meta.reporter import Reporter
+
+    from .reporter import Reporter
 
 
 GITHUB_ORG_NAME = "ScottyLabs-Labrador"

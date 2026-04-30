@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from enum import Enum
+from typing import TYPE_CHECKING
 
+from meta.loaders.types import LoaderErrorCode
 from meta.logger import get_app_logger
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class ErrorCode(Enum):
@@ -67,3 +72,25 @@ class Reporter:
             raise SystemExit(1)
 
         self.logger.success("Validation passed!")
+
+
+def bind_reporter(reporter: Reporter) -> Callable[[str, LoaderErrorCode, str], None]:
+    """Return a ``RecordFn``-compatible callback backed by ``reporter``."""
+
+    def record(
+        file_path: str,
+        loader_error_code: LoaderErrorCode,
+        message: str,
+    ) -> None:
+        match loader_error_code:
+            case LoaderErrorCode.MEMBER_NOT_FILE:
+                error_code = ErrorCode.MEMBER_NOT_FILE
+            case LoaderErrorCode.MEMBER_KEY_ORDERING:
+                error_code = ErrorCode.MEMBER_KEY_ORDERING
+            case LoaderErrorCode.TEAM_NOT_FILE:
+                error_code = ErrorCode.TEAM_NOT_FILE
+            case LoaderErrorCode.TEAM_KEY_ORDERING:
+                error_code = ErrorCode.TEAM_KEY_ORDERING
+        reporter.insert_error(file_path, error_code, message)
+
+    return record
